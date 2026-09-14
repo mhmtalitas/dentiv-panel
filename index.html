@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Dentiv - Açı Ölçümü</title>
+
+<!-- PWA / iOS Ana Ekrana Ekleme desteği -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f1115">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Dentiv">
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
+
+<style>
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    margin: 0;
+    background: #0f1115;
+    color: #f0f2f5;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    text-align: center;
+    user-select: none;
+    touch-action: manipulation;
+}
+
+.container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.header h1 {
+    margin: 8px 0 2px 0;
+    font-size: 24px;
+    letter-spacing: 0.5px;
+    color: #ffffff;
+}
+
+.header p {
+    margin: 0;
+    font-size: 12px;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#status {
+    margin: 10px 0;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: rgba(255, 152, 0, 0.1);
+    color: #ffa726;
+    font-weight: 600;
+    font-size: 14px;
+    display: inline-block;
+}
+
+.warning-banner {
+    background: rgba(255, 152, 0, 0.12);
+    border: 1px solid rgba(255, 152, 0, 0.4);
+    color: #ffb74d;
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 12px;
+    text-align: left;
+    margin: 8px 0;
+    line-height: 1.4;
+}
+
+/* Parametre Yönetim Paneli */
+.param-control-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #181b20;
+    border: 1px solid #282c34;
+    border-radius: 12px;
+    padding: 10px 14px;
+    margin: 10px 0;
+}
+
+.param-title-text {
+    font-size: 13px;
+    font-weight: 700;
+    color: #8a94a6;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.param-btn-group {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: none;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.btn-add { background: #2563eb; }
+.btn-remove { background: #dc2626; }
+.btn-add:disabled, .btn-remove:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* Ölçüm Kartları */
+.measure-card {
+    background: #14171c;
+    border: 1px solid #282c34;
+    border-radius: 16px;
+    padding: 14px;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.measure-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #22262f;
+}
+
+.measure-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #00b0ff;
+    letter-spacing: 0.5px;
+}
+
+.values {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.value-box {
+    background: #181b20;
+    border: 1px solid #282c34;
+    border-radius: 12px;
+    padding: 12px 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+.value-title {
+    color: #8a94a6;
+    margin-bottom: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.value-number {
+    font-size: 32px;
+    font-family: 'SF Mono', Consolas, monospace;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.pitchVal { color: #00e676; }
+.rollVal  { color: #00b0ff; }
+
+.axis {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    margin-top: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    color: #495057;
+}
+
+.axis .arrow {
+    font-size: 14px;
+    transition: transform 0.2s, color 0.2s;
+}
+
+.axis .active {
+    color: #ffffff !important;
+    text-shadow: 0 0 8px currentColor;
+}
+
+/* Kart İçi Sıfırlama Butonu */
+.btn-card-zero {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background: #d97706;
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+}
+
+.btn-card-zero:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+}
+
+/* Hassasiyet ve Filtre Ayar Paneli */
+.settings-panel {
+    background: #181b20;
+    border: 1px solid #282c34;
+    border-radius: 14px;
+    padding: 12px 16px;
+    margin: 8px 0;
+    text-align: left;
+}
+
+.setting-item {
+    margin-bottom: 10px;
+}
+
+.setting-item:last-child {
+    margin-bottom: 0;
+}
+
+.setting-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 600;
+    color: #8a94a6;
+    margin-bottom: 6px;
+}
+
+.setting-label span.val-indicator {
+    color: #00b0ff;
+    font-family: monospace;
+}
+
+input[type=range] {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: #282c34;
+    outline: none;
+    accent-color: #2563eb;
+    cursor: pointer;
+}
+
+.control-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 12px;
+}
+
+select, button, input[type=text] {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    transition: opacity 0.2s, transform 0.1s;
+}
+
+select, input[type=text] {
+    background: #181b20;
+    color: #fff;
+    border: 1px solid #282c34;
+    outline: none;
+    font-weight: 400;
+}
+
+input[type=text]:focus {
+    border-color: #2563eb;
+}
+
+button {
+    color: white;
+    cursor: pointer;
+}
+
+button:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+}
+
+button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+#connectBtn { background: #059669; }
+#connectBtn.disconnect { background: #dc2626; }
+
+.battery-container {
+    background: #181b20;
+    border: 1px solid #282c34;
+    padding: 10px 14px;
+    border-radius: 12px;
+    margin: 6px 0;
+}
+
+.battery-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 600;
+    color: #8a94a6;
+    margin-bottom: 6px;
+}
+
+.battery-bar {
+    width: 100%;
+    height: 8px;
+    border-radius: 4px;
+    background: #282c34;
+    overflow: hidden;
+}
+
+#batteryFill {
+    width: 0%;
+    height: 100%;
+    background: #00cc66;
+    transition: width 0.3s ease, background-color 0.3s;
+}
+
+/* Sesli Algılama Butonu ve Durum Alanı */
+#voiceBtn {
+    background: #7c3aed;
+    margin-bottom: 4px;
+}
+
+.voice-status {
+    font-size: 11px;
+    color: #8a94a6;
+    margin-top: -4px;
+    margin-bottom: 6px;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>DENTIV</h1>
+        <p>Hassas Açı Ölçüm Sistemi</p>
+    </div>
+
+    <div>
+        <div id="status">Bağlantı Yok</div>
+    </div>
+
+    <div id="mixedContentWarning" class="warning-banner" hidden>
+        ⚠️ Bu sayfa internet üzerinden (HTTPS) açıldı. Yerel cihaza bağlanabilmek için telefonunuzu Dentiv cihazının kendi WiFi ağına bağlayıp <strong>http://192.168.4.1</strong> adresini açın.
+    </div>
+
+    <!-- Ölçüm Parametresi Ekle / Çıkar Barı -->
+    <div class="param-control-bar">
+        <span class="param-title-text">Ölçüm Parametreleri</span>
+        <div class="param-btn-group">
+            <button id="removeParamBtn" class="btn-icon btn-remove" title="Parametre Sil">-</button>
+            <button id="addParamBtn" class="btn-icon btn-add" title="Yeni Parametre Ekle">+</button>
+        </div>
+    </div>
+
+    <!-- Dinamik Ölçüm Kartları Konteynırı -->
+    <div id="measurementsContainer"></div>
+
+    <!-- HASSASİYET VE TEPKİ AYAR PANELERİ -->
+    <div class="settings-panel">
+        <div class="setting-item">
+            <div class="setting-label">
+                <span>Ekran Güncelleme Hızı (Titreşim Önleyici)</span>
+                <span id="smoothText" class="val-indicator">Dengeli</span>
+            </div>
+            <input type="range" id="smoothSlider" min="1" max="10" value="5">
+        </div>
+
+        <div class="setting-item" style="margin-top: 10px;">
+            <div class="setting-label">
+                <span>Hassasiyet (Ondalık Basamak)</span>
+                <span id="precisionText" class="val-indicator">0.0° (1 Basamak)</span>
+            </div>
+            <input type="range" id="precisionSlider" min="0" max="2" value="1">
+        </div>
+    </div>
+
+    <div class="battery-container">
+        <div class="battery-header">
+            <span>Cihaz Pili</span>
+            <span id="batteryText">--%</span>
+        </div>
+        <div class="battery-bar">
+            <div id="batteryFill"></div>
+        </div>
+    </div>
+
+    <div class="control-panel">
+        <button id="voiceBtn">🎤 Sesli Komutu Başlat ("Sıfırla")</button>
+        <div id="voiceStatus" class="voice-status">Sesli dinleme kapalı</div>
+
+        <input type="text" id="hostInput" placeholder="Cihaz IP adresi (örn. 192.168.4.1)" inputmode="decimal" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <button id="connectBtn">Bağlan</button>
+    </div>
+
+</div>
+
+<script>
+// ================== BAĞLANTI AYARLARI (WiFi / WebSocket) ==================
+const WS_PATH = '/ws';
+const RECONNECT_START_DELAY = 1000;
+const RECONNECT_MAX_DELAY = 5000;
+
+let socket = null;
+let intentionalClose = false;
+let reconnectDelay = RECONNECT_START_DELAY;
+let reconnectTimer = null;
+
+let selectedDevice = null; // geriye dönük uyumluluk için tutulmuyor, kaldırıldı
+
+// Sensörden gelen ham veriler
+let rawPitch = 0, rawRoll = 0, battery = 0;
+
+// Filtrelenmiş (yumuşatılmış) veriler
+let smoothedPitch = 0, smoothedRoll = 0;
+
+// Her bir ölçüm parametresi için bağımsız referans (Sıfırlama) verileri dizisi
+let refPoints = [
+    { refPitch: 0, refRoll: 0 } // Varsayılan 1. Parametre
+];
+
+// Ayarlar
+let filterFactor = 0.5; // Yumuşatma faktörü
+let precisionDigits = 1; // Ondalık basamak sayısı
+
+const statusEl = document.getElementById('status');
+const warningEl = document.getElementById('mixedContentWarning');
+const hostInput = document.getElementById('hostInput');
+const connectBtn = document.getElementById('connectBtn');
+const batteryText = document.getElementById('batteryText');
+const batteryFill = document.getElementById('batteryFill');
+const measurementsContainer = document.getElementById('measurementsContainer');
+
+const smoothSlider = document.getElementById('smoothSlider');
+const smoothText = document.getElementById('smoothText');
+const precisionSlider = document.getElementById('precisionSlider');
+const precisionText = document.getElementById('precisionText');
+
+const voiceBtn = document.getElementById('voiceBtn');
+const voiceStatus = document.getElementById('voiceStatus');
+
+// Slider Değişim Olayları
+smoothSlider.oninput = (e) => {
+    const val = parseInt(e.target.value);
+    filterFactor = 1 - ((val - 1) * 0.1);
+
+    if (val <= 3) smoothText.textContent = "Hızlı (Anlık)";
+    else if (val <= 7) smoothText.textContent = "Dengeli";
+    else smoothText.textContent = "Pürüzsüz (Çok Yavaş)";
+};
+
+precisionSlider.oninput = (e) => {
+    precisionDigits = parseInt(e.target.value);
+    if (precisionDigits === 0) precisionText.textContent = "0° (Tam Sayı)";
+    else if (precisionDigits === 1) precisionText.textContent = "0.0° (1 Basamak)";
+    else precisionText.textContent = "0.00° (2 Basamak)";
+
+    updateUI();
+};
+
+function vibrate() {
+    if (navigator.vibrate) navigator.vibrate(40);
+}
+
+// Durum göstergesini tek yerden yönet
+function setStatus(text, kind) {
+    statusEl.textContent = text;
+    const palette = {
+        idle:       { color: '#ffa726', bg: 'rgba(255, 152, 0, 0.1)' },
+        connecting: { color: '#ffa726', bg: 'rgba(255, 152, 0, 0.1)' },
+        connected:  { color: '#66bb6a', bg: 'rgba(76, 175, 80, 0.15)' },
+        error:      { color: '#ef5350', bg: 'rgba(244, 67, 54, 0.1)' },
+        notice:     { color: '#ffca28', bg: 'rgba(255, 202, 40, 0.1)' },
+    };
+    const s = palette[kind] || palette.idle;
+    statusEl.style.color = s.color;
+    statusEl.style.background = s.bg;
+}
+
+function isSocketOpen() {
+    return !!socket && socket.readyState === WebSocket.OPEN;
+}
+
+// ================== ÖLÇÜM KARTLARI ==================
+function renderMeasurementCards() {
+    measurementsContainer.innerHTML = '';
+
+    refPoints.forEach((ref, index) => {
+        const cardIndex = index + 1;
+        const card = document.createElement('div');
+        card.className = 'measure-card';
+        card.id = `measureCard_${cardIndex}`;
+
+        card.innerHTML = `
+            <div class="measure-header">
+                <span class="measure-title">Ölçüm Parametresi ${cardIndex}</span>
+            </div>
+            <div class="values">
+                <div class="value-box">
+                    <div class="value-title">PITCH</div>
+                    <div id="pitchVal_${cardIndex}" class="value-number pitchVal">0.0°</div>
+                    <div class="axis">
+                        <span id="upTxt_${cardIndex}">UP</span>
+                        <span id="upArrow_${cardIndex}" class="arrow">↑</span>
+                        <span id="downArrow_${cardIndex}" class="arrow">↓</span>
+                        <span id="downTxt_${cardIndex}">DOWN</span>
+                    </div>
+                </div>
+
+                <div class="value-box">
+                    <div class="value-title">ROLL</div>
+                    <div id="rollVal_${cardIndex}" class="value-number rollVal">0.0°</div>
+                    <div class="axis">
+                        <span id="leftTxt_${cardIndex}">LEFT</span>
+                        <span id="leftArrow_${cardIndex}" class="arrow">←</span>
+                        <span id="rightArrow_${cardIndex}" class="arrow">→</span>
+                        <span id="rightTxt_${cardIndex}">RIGHT</span>
+                    </div>
+                </div>
+            </div>
+            <button class="btn-card-zero" onclick="zeroParameter(${index})">Sıfır Noktası Belirle (${cardIndex})</button>
+        `;
+
+        measurementsContainer.appendChild(card);
+    });
+
+    // Silme butonunun durumunu güncelle (En az 1 parametre kalmalı)
+    document.getElementById('removeParamBtn').disabled = refPoints.length <= 1;
+    updateUI();
+}
+
+// Parametre Ekle / Çıkar Fonksiyonları
+document.getElementById('addParamBtn').onclick = () => {
+    vibrate();
+    // Yeni parametreyi anlık açı değerleriyle sıfırlayarak ekle
+    refPoints.push({
+        refPitch: rawPitch,
+        refRoll: rawRoll
+    });
+    renderMeasurementCards();
+};
+
+document.getElementById('removeParamBtn').onclick = () => {
+    vibrate();
+    if (refPoints.length > 1) {
+        refPoints.pop();
+        renderMeasurementCards();
+    }
+};
+
+// Belirli bir parametreyi sıfırlama
+window.zeroParameter = function (index) {
+    vibrate();
+    refPoints[index].refPitch = rawPitch;
+    refPoints[index].refRoll = rawRoll;
+
+    // Ilgili anlık filtre hafızasını güncelle
+    smoothedPitch = rawPitch;
+    smoothedRoll = rawRoll;
+
+    setStatus(`Parametre ${index + 1} Sıfırlandı`, 'notice');
+    setTimeout(() => {
+        setStatus(isSocketOpen() ? 'BAĞLI' : 'Bağlantı Yok', isSocketOpen() ? 'connected' : 'idle');
+    }, 1500);
+
+    updateUI();
+};
+
+// ================== WEBSOCKET BAĞLANTISI ==================
+function connectWebSocket(host) {
+    if (!host) {
+        alert('Lütfen cihaz IP adresini girin.');
+        return;
+    }
+
+    try {
+        localStorage.setItem('dentiv_host', host);
+    } catch (e) {
+        // localStorage kullanılamıyorsa (gizli sekme vb.) sessizce devam et
+    }
+
+    intentionalClose = false;
+    clearTimeout(reconnectTimer);
+
+    if (socket) {
+        socket.onclose = null; // eski soketin close olayı yeni bağlantıyı etkilemesin
+        try { socket.close(); } catch (e) { /* zaten kapalıysa yoksay */ }
+    }
+
+    setStatus('Bağlanıyor...', 'connecting');
+    connectBtn.disabled = true;
+
+    const url = `ws://${host}${WS_PATH}`;
+    socket = new WebSocket(url);
+
+    socket.onopen = () => {
+        reconnectDelay = RECONNECT_START_DELAY;
+        setStatus('BAĞLI', 'connected');
+        connectBtn.textContent = 'Bağlantıyı Kes';
+        connectBtn.classList.add('disconnect');
+        connectBtn.disabled = false;
+        vibrate();
+    };
+
+    socket.onmessage = handleData;
+
+    socket.onerror = () => {
+        // Ayrıntılı hata bilgisi tarayıcı tarafından verilmiyor; asıl durum onclose'da işlenir
+    };
+
+    socket.onclose = () => {
+        connectBtn.textContent = 'Bağlan';
+        connectBtn.classList.remove('disconnect');
+        connectBtn.disabled = false;
+
+        if (intentionalClose) {
+            setStatus('Bağlantı Yok', 'idle');
+            return;
+        }
+
+        const seconds = Math.round(reconnectDelay / 1000);
+        setStatus(`Bağlantı Koptu, ${seconds}sn içinde yeniden denenecek...`, 'error');
+        reconnectTimer = setTimeout(() => connectWebSocket(host), reconnectDelay);
+        reconnectDelay = Math.min(reconnectDelay * 1.5, RECONNECT_MAX_DELAY);
+    };
+}
+
+function disconnectWebSocket() {
+    intentionalClose = true;
+    clearTimeout(reconnectTimer);
+    if (socket) socket.close();
+}
+
+connectBtn.onclick = () => {
+    vibrate();
+    if (isSocketOpen()) {
+        disconnectWebSocket();
+    } else {
+        reconnectDelay = RECONNECT_START_DELAY;
+        connectWebSocket(hostInput.value.trim());
+    }
+};
+
+function handleData(event) {
+    const text = String(event.data).trim();
+    const parts = text.split(',');
+    if (parts.length < 2) return;
+
+    const p = parseFloat(parts[0]);
+    const r = parseFloat(parts[1]);
+    if (Number.isNaN(p) || Number.isNaN(r)) return; // bozuk veri karesini yoksay
+
+    rawPitch = p;
+    rawRoll = r;
+
+    if (parts.length >= 3) {
+        const b = parseInt(parts[2], 10);
+        if (!Number.isNaN(b)) battery = b;
+    }
+
+    // 4. Parametre: ESP32'den gelen komut (cihaz üzerindeki fiziksel buton)
+    if (parts.length >= 4 && parts[3].trim() === 'ZERO') {
+        zeroParameter(refPoints.length - 1); // En son eklenen aktif parametreyi sıfırla
+    }
+
+    // Üstel Hareketli Ortalama (EMA) Filtresi Uygulama
+    smoothedPitch = (rawPitch * filterFactor) + (smoothedPitch * (1 - filterFactor));
+    smoothedRoll  = (rawRoll * filterFactor)  + (smoothedRoll  * (1 - filterFactor));
+
+    updateUI();
+}
+
+function updateUI() {
+    refPoints.forEach((ref, index) => {
+        const cardIndex = index + 1;
+        const pitchEl = document.getElementById(`pitchVal_${cardIndex}`);
+        const rollEl = document.getElementById(`rollVal_${cardIndex}`);
+
+        if (!pitchEl || !rollEl) return;
+
+        const rp = smoothedPitch - ref.refPitch;
+        const rr = smoothedRoll - ref.refRoll;
+
+        // Seçilen basamak sayısına göre ekrana yazdır
+        pitchEl.textContent = rp.toFixed(precisionDigits) + '°';
+        rollEl.textContent  = rr.toFixed(precisionDigits) + '°';
+
+        // Ok Parlama Mantığı
+        const upArrow = document.getElementById(`upArrow_${cardIndex}`);
+        const upTxt = document.getElementById(`upTxt_${cardIndex}`);
+        const downArrow = document.getElementById(`downArrow_${cardIndex}`);
+        const downTxt = document.getElementById(`downTxt_${cardIndex}`);
+
+        const rightArrow = document.getElementById(`rightArrow_${cardIndex}`);
+        const rightTxt = document.getElementById(`rightTxt_${cardIndex}`);
+        const leftArrow = document.getElementById(`leftArrow_${cardIndex}`);
+        const leftTxt = document.getElementById(`leftTxt_${cardIndex}`);
+
+        if (upArrow) upArrow.classList.toggle('active', rp > 0.5);
+        if (upTxt) upTxt.classList.toggle('active', rp > 0.5);
+        if (downArrow) downArrow.classList.toggle('active', rp < -0.5);
+        if (downTxt) downTxt.classList.toggle('active', rp < -0.5);
+
+        if (rightArrow) rightArrow.classList.toggle('active', rr > 0.5);
+        if (rightTxt) rightTxt.classList.toggle('active', rr > 0.5);
+        if (leftArrow) leftArrow.classList.toggle('active', rr < -0.5);
+        if (leftTxt) leftTxt.classList.toggle('active', rr < -0.5);
+    });
+
+    // Pil Göstergesi
+    batteryText.textContent = battery + '%';
+    batteryFill.style.width = Math.min(100, Math.max(0, battery)) + '%';
+
+    if (battery > 50) batteryFill.style.background = '#00e676';
+    else if (battery > 20) batteryFill.style.background = '#ffb300';
+    else batteryFill.style.background = '#ff3d00';
+}
+
+// ================== WEB SPEECH API (SESLİ KOMUT ENTEGRASYONU) ==================
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+let recognition = null;
+let isListening = false;
+
+if (SpeechRecognition) {
+    recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = false;
+    recognition.lang = 'tr-TR';
+
+    recognition.onresult = (event) => {
+        const lastResultIndex = event.results.length - 1;
+        const command = event.results[lastResultIndex][0].transcript.trim().toLowerCase();
+
+        voiceStatus.textContent = `Algılandı: "${command}"`;
+
+        // "sıfırla", "sıfır", "reset", "temizle" kelimelerini yakala
+        if (command.includes('sıfırla') || command.includes('sıfır') || command.includes('reset') || command.includes('temizle')) {
+            zeroParameter(refPoints.length - 1);
+        }
+    };
+
+    recognition.onerror = (e) => {
+        console.error("Ses tanıma hatası:", e.error);
+        voiceStatus.textContent = "Ses tanıma hatası oluştu";
+        if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+            // İzin verilmediyse otomatik yeniden başlatma döngüsüne girme
+            isListening = false;
+            voiceBtn.textContent = '🎤 Sesli Komutu Başlat ("Sıfırla")';
+            voiceBtn.style.background = '#7c3aed';
+        }
+    };
+
+    recognition.onend = () => {
+        if (isListening) {
+            recognition.start(); // Sürekli dinlemede kalması için otomatik yeniden başlat
+        }
+    };
+} else {
+    voiceBtn.disabled = true;
+    voiceBtn.style.opacity = "0.5";
+    voiceStatus.textContent = "Tarayıcınız sesli komutu desteklemiyor";
+}
+
+voiceBtn.onclick = () => {
+    vibrate();
+    if (!recognition) return;
+
+    if (!isListening) {
+        isListening = true;
+        recognition.start();
+        voiceBtn.textContent = '🛑 Sesli Dinlemeyi Durdur';
+        voiceBtn.style.background = '#dc2626';
+        voiceStatus.textContent = 'Dinleniyor... ("Sıfırla" deyin)';
+    } else {
+        isListening = false;
+        recognition.stop();
+        voiceBtn.textContent = '🎤 Sesli Komutu Başlat ("Sıfırla")';
+        voiceBtn.style.background = '#7c3aed';
+        voiceStatus.textContent = 'Sesli dinleme kapalı';
+    }
+};
+
+// ================== BAŞLANGIÇ ==================
+function initConnection() {
+    const isHttps = location.protocol === 'https:';
+    let savedHost = null;
+    try { savedHost = localStorage.getItem('dentiv_host'); } catch (e) { /* yoksay */ }
+
+    let defaultHost;
+    if (!isHttps && location.hostname) {
+        // Sayfa doğrudan ESP32 (veya yerel bir geliştirme sunucusu) üzerinden açıldı:
+        // aynı adrese bağlan. location.host, varsayılan olmayan portu da içerir.
+        defaultHost = location.host;
+    } else {
+        defaultHost = savedHost || '192.168.4.1';
+    }
+    hostInput.value = defaultHost;
+
+    if (isHttps) {
+        warningEl.hidden = false;
+    } else {
+        connectWebSocket(defaultHost);
+    }
+}
+
+function registerServiceWorker() {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').catch(() => { /* ESP32 üzerinden http ile açıldıysa desteklenmez */ });
+    }
+}
+
+// Sayfa ilk yüklendiğinde kartları oluştur ve bağlantıyı başlat
+renderMeasurementCards();
+initConnection();
+registerServiceWorker();
+</script>
+
+</body>
+</html>
