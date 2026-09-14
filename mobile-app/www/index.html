@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Dentiv - Açı Ölçümü</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    margin: 0;
+    background: #0f1115;
+    color: #f0f2f5;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    text-align: center;
+    user-select: none;
+    touch-action: manipulation;
+}
+
+.container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 16px;
+    padding-top: calc(16px + env(safe-area-inset-top));
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.header h1 {
+    margin: 8px 0 2px 0;
+    font-size: 24px;
+    letter-spacing: 0.5px;
+    color: #ffffff;
+}
+
+.header p {
+    margin: 0;
+    font-size: 12px;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#status {
+    margin: 10px 0;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: rgba(255, 152, 0, 0.1);
+    color: #ffa726;
+    font-weight: 600;
+    font-size: 14px;
+    display: inline-block;
+}
+
+/* Parametre Yönetim Paneli */
+.param-control-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #181b20;
+    border: 1px solid #282c34;
+    border-radius: 12px;
+    padding: 10px 14px;
+    margin: 10px 0;
+}
+
+.param-title-text {
+    font-size: 13px;
+    font-weight: 700;
+    color: #8a94a6;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.param-btn-group {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: none;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.btn-add { background: #2563eb; }
+.btn-remove { background: #dc2626; }
+.btn-add:disabled, .btn-remove:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* Ölçüm Kartları */
+.measure-card {
+    background: #14171c;
+    border: 1px solid #282c34;
+    border-radius: 16px;
+    padding: 14px;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.measure-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #22262f;
+}
+
+.measure-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #00b0ff;
+    letter-spacing: 0.5px;
+}
+
+.values {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.value-box {
+    background: #181b20;
+    border: 1px solid #282c34;
+    border-radius: 12px;
+    padding: 12px 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+.value-title {
+    color: #8a94a6;
+    margin-bottom: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.value-number {
+    font-size: 32px;
+    font-family: 'SF Mono', Consolas, monospace;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.pitchVal { color: #00e676; }
+.rollVal  { color: #00b0ff; }
+
+.axis {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    margin-top: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    color: #495057;
+}
+
+.axis .arrow {
+    font-size: 14px;
+    transition: transform 0.2s, color 0.2s;
+}
+
+.axis .active {
+    color: #ffffff !important;
+    text-shadow: 0 0 8px currentColor;
+}
+
+/* Kart İçi Sıfırlama Butonu */
+.btn-card-zero {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background: #d97706;
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+}
+
+.btn-card-zero:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+}
+
+/* Hassasiyet ve Filtre Ayar Paneli */
+.settings-panel {
+    background: #181b20;
+    border: 1px solid #282c34;
+    border-radius: 14px;
+    padding: 12px 16px;
+    margin: 8px 0;
+    text-align: left;
+}
+
+.setting-item {
+    margin-bottom: 10px;
+}
+
+.setting-item:last-child {
+    margin-bottom: 0;
+}
+
+.setting-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 600;
+    color: #8a94a6;
+    margin-bottom: 6px;
+}
+
+.setting-label span.val-indicator {
+    color: #00b0ff;
+    font-family: monospace;
+}
+
+input[type=range] {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: #282c34;
+    outline: none;
+    accent-color: #2563eb;
+    cursor: pointer;
+}
+
+.control-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 12px;
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+}
+
+button:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+}
+
+button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+#connectBtn { background: #059669; }
+#connectBtn.disconnect { background: #dc2626; }
+
+.battery-container {
+    background: #181b20;
+    border: 1px solid #282c34;
+    padding: 10px 14px;
+    border-radius: 12px;
+    margin: 6px 0;
+}
+
+.battery-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 600;
+    color: #8a94a6;
+    margin-bottom: 6px;
+}
+
+.battery-bar {
+    width: 100%;
+    height: 8px;
+    border-radius: 4px;
+    background: #282c34;
+    overflow: hidden;
+}
+
+#batteryFill {
+    width: 0%;
+    height: 100%;
+    background: #00cc66;
+    transition: width 0.3s ease, background-color 0.3s;
+}
+
+/* Sesli Algılama Butonu ve Durum Alanı */
+#voiceBtn {
+    background: #7c3aed;
+    margin-bottom: 4px;
+}
+
+.voice-status {
+    font-size: 11px;
+    color: #8a94a6;
+    margin-top: -4px;
+    margin-bottom: 6px;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>DENTIV</h1>
+        <p>Hassas Açı Ölçüm Sistemi</p>
+    </div>
+
+    <div>
+        <div id="status">Bağlantı Yok</div>
+    </div>
+
+    <!-- Ölçüm Parametresi Ekle / Çıkar Barı -->
+    <div class="param-control-bar">
+        <span class="param-title-text">Ölçüm Parametreleri</span>
+        <div class="param-btn-group">
+            <button id="removeParamBtn" class="btn-icon btn-remove" title="Parametre Sil">-</button>
+            <button id="addParamBtn" class="btn-icon btn-add" title="Yeni Parametre Ekle">+</button>
+        </div>
+    </div>
+
+    <!-- Dinamik Ölçüm Kartları Konteynırı -->
+    <div id="measurementsContainer"></div>
+
+    <!-- HASSASİYET VE TEPKİ AYAR PANELERİ -->
+    <div class="settings-panel">
+        <div class="setting-item">
+            <div class="setting-label">
+                <span>Ekran Güncelleme Hızı (Titreşim Önleyici)</span>
+                <span id="smoothText" class="val-indicator">Dengeli</span>
+            </div>
+            <input type="range" id="smoothSlider" min="1" max="10" value="5">
+        </div>
+
+        <div class="setting-item" style="margin-top: 10px;">
+            <div class="setting-label">
+                <span>Hassasiyet (Ondalık Basamak)</span>
+                <span id="precisionText" class="val-indicator">0.0° (1 Basamak)</span>
+            </div>
+            <input type="range" id="precisionSlider" min="0" max="2" value="1">
+        </div>
+    </div>
+
+    <div class="battery-container">
+        <div class="battery-header">
+            <span>Cihaz Pili</span>
+            <span id="batteryText">--%</span>
+        </div>
+        <div class="battery-bar">
+            <div id="batteryFill"></div>
+        </div>
+    </div>
+
+    <div class="control-panel">
+        <button id="voiceBtn">🎤 Sesli Komutu Başlat ("Sıfırla")</button>
+        <div id="voiceStatus" class="voice-status">Sesli dinleme kapalı</div>
+
+        <button id="connectBtn">Cihaz Tara ve Bağlan</button>
+    </div>
+
+</div>
+
+<script src="capacitor.js"></script>
+<script src="bluetooth-le.js"></script>
+<script>
+const { BleClient, dataViewToText } = capacitorCommunityBluetoothLe;
+
+// ================== BLUETOOTH AYARLARI ==================
+const SERVICE_UUID = '12345678-1234-1234-1234-1234567890ab';
+const CHAR_UUID    = 'abcd1234-5678-90ab-cdef-1234567890ab';
+
+let connectedDeviceId = null;
+let bleReady = false;
+
+// Sensörden gelen ham veriler
+let rawPitch = 0, rawRoll = 0, battery = 0;
+
+// Filtrelenmiş (yumuşatılmış) veriler
+let smoothedPitch = 0, smoothedRoll = 0;
+
+// Her bir ölçüm parametresi için bağımsız referans (Sıfırlama) verileri dizisi
+let refPoints = [
+    { refPitch: 0, refRoll: 0 } // Varsayılan 1. Parametre
+];
+
+// Ayarlar
+let filterFactor = 0.5; // Yumuşatma faktörü
+let precisionDigits = 1; // Ondalık basamak sayısı
+
+const statusEl = document.getElementById('status');
+const connectBtn = document.getElementById('connectBtn');
+const batteryText = document.getElementById('batteryText');
+const batteryFill = document.getElementById('batteryFill');
+const measurementsContainer = document.getElementById('measurementsContainer');
+
+const smoothSlider = document.getElementById('smoothSlider');
+const smoothText = document.getElementById('smoothText');
+const precisionSlider = document.getElementById('precisionSlider');
+const precisionText = document.getElementById('precisionText');
+
+const voiceBtn = document.getElementById('voiceBtn');
+const voiceStatus = document.getElementById('voiceStatus');
+
+// Slider Değişim Olayları
+smoothSlider.oninput = (e) => {
+    const val = parseInt(e.target.value);
+    filterFactor = 1 - ((val - 1) * 0.1);
+
+    if (val <= 3) smoothText.textContent = "Hızlı (Anlık)";
+    else if (val <= 7) smoothText.textContent = "Dengeli";
+    else smoothText.textContent = "Pürüzsüz (Çok Yavaş)";
+};
+
+precisionSlider.oninput = (e) => {
+    precisionDigits = parseInt(e.target.value);
+    if (precisionDigits === 0) precisionText.textContent = "0° (Tam Sayı)";
+    else if (precisionDigits === 1) precisionText.textContent = "0.0° (1 Basamak)";
+    else precisionText.textContent = "0.00° (2 Basamak)";
+
+    updateUI();
+};
+
+function vibrate() {
+    if (navigator.vibrate) navigator.vibrate(40);
+}
+
+// Durum göstergesini tek yerden yönet
+function setStatus(text, kind) {
+    statusEl.textContent = text;
+    const palette = {
+        idle:       { color: '#ffa726', bg: 'rgba(255, 152, 0, 0.1)' },
+        connecting: { color: '#ffa726', bg: 'rgba(255, 152, 0, 0.1)' },
+        connected:  { color: '#66bb6a', bg: 'rgba(76, 175, 80, 0.15)' },
+        error:      { color: '#ef5350', bg: 'rgba(244, 67, 54, 0.1)' },
+        notice:     { color: '#ffca28', bg: 'rgba(255, 202, 40, 0.1)' },
+    };
+    const s = palette[kind] || palette.idle;
+    statusEl.style.color = s.color;
+    statusEl.style.background = s.bg;
+}
+
+// ================== ÖLÇÜM KARTLARI ==================
+function renderMeasurementCards() {
+    measurementsContainer.innerHTML = '';
+
+    refPoints.forEach((ref, index) => {
+        const cardIndex = index + 1;
+        const card = document.createElement('div');
+        card.className = 'measure-card';
+        card.id = `measureCard_${cardIndex}`;
+
+        card.innerHTML = `
+            <div class="measure-header">
+                <span class="measure-title">Ölçüm Parametresi ${cardIndex}</span>
+            </div>
+            <div class="values">
+                <div class="value-box">
+                    <div class="value-title">PITCH</div>
+                    <div id="pitchVal_${cardIndex}" class="value-number pitchVal">0.0°</div>
+                    <div class="axis">
+                        <span id="upTxt_${cardIndex}">UP</span>
+                        <span id="upArrow_${cardIndex}" class="arrow">↑</span>
+                        <span id="downArrow_${cardIndex}" class="arrow">↓</span>
+                        <span id="downTxt_${cardIndex}">DOWN</span>
+                    </div>
+                </div>
+
+                <div class="value-box">
+                    <div class="value-title">ROLL</div>
+                    <div id="rollVal_${cardIndex}" class="value-number rollVal">0.0°</div>
+                    <div class="axis">
+                        <span id="leftTxt_${cardIndex}">LEFT</span>
+                        <span id="leftArrow_${cardIndex}" class="arrow">←</span>
+                        <span id="rightArrow_${cardIndex}" class="arrow">→</span>
+                        <span id="rightTxt_${cardIndex}">RIGHT</span>
+                    </div>
+                </div>
+            </div>
+            <button class="btn-card-zero" onclick="zeroParameter(${index})">Sıfır Noktası Belirle (${cardIndex})</button>
+        `;
+
+        measurementsContainer.appendChild(card);
+    });
+
+    // Silme butonunun durumunu güncelle (En az 1 parametre kalmalı)
+    document.getElementById('removeParamBtn').disabled = refPoints.length <= 1;
+    updateUI();
+}
+
+// Parametre Ekle / Çıkar Fonksiyonları
+document.getElementById('addParamBtn').onclick = () => {
+    vibrate();
+    // Yeni parametreyi anlık açı değerleriyle sıfırlayarak ekle
+    refPoints.push({
+        refPitch: rawPitch,
+        refRoll: rawRoll
+    });
+    renderMeasurementCards();
+};
+
+document.getElementById('removeParamBtn').onclick = () => {
+    vibrate();
+    if (refPoints.length > 1) {
+        refPoints.pop();
+        renderMeasurementCards();
+    }
+};
+
+// Belirli bir parametreyi sıfırlama
+window.zeroParameter = function (index) {
+    vibrate();
+    refPoints[index].refPitch = rawPitch;
+    refPoints[index].refRoll = rawRoll;
+
+    // Ilgili anlık filtre hafızasını güncelle
+    smoothedPitch = rawPitch;
+    smoothedRoll = rawRoll;
+
+    setStatus(`Parametre ${index + 1} Sıfırlandı`, 'notice');
+    setTimeout(() => {
+        setStatus(connectedDeviceId ? 'BAĞLI' : 'Bağlantı Yok', connectedDeviceId ? 'connected' : 'idle');
+    }, 1500);
+
+    updateUI();
+};
+
+// ================== BLUETOOTH BAĞLANTISI ==================
+async function ensureBleReady() {
+    if (bleReady) return true;
+    try {
+        await BleClient.initialize();
+        bleReady = true;
+        return true;
+    } catch (e) {
+        console.error(e);
+        setStatus('Bluetooth kullanılamıyor', 'error');
+        return false;
+    }
+}
+
+function onBleDisconnected() {
+    connectedDeviceId = null;
+    connectBtn.textContent = 'Cihaz Tara ve Bağlan';
+    connectBtn.classList.remove('disconnect');
+    connectBtn.disabled = false;
+    setStatus('Bağlantı Yok', 'idle');
+}
+
+async function scanAndConnect() {
+    const ready = await ensureBleReady();
+    if (!ready) return;
+
+    connectBtn.disabled = true;
+    try {
+        setStatus('Cihaz Taranıyor...', 'connecting');
+        const device = await BleClient.requestDevice({
+            services: [SERVICE_UUID],
+        });
+
+        setStatus('Bağlanıyor...', 'connecting');
+        await BleClient.connect(device.deviceId, onBleDisconnected);
+        connectedDeviceId = device.deviceId;
+
+        await BleClient.startNotifications(device.deviceId, SERVICE_UUID, CHAR_UUID, handleBleValue);
+
+        setStatus('BAĞLI', 'connected');
+        connectBtn.textContent = 'Bağlantıyı Kes';
+        connectBtn.classList.add('disconnect');
+        vibrate();
+    } catch (e) {
+        console.error(e);
+        connectedDeviceId = null;
+        connectBtn.textContent = 'Cihaz Tara ve Bağlan';
+        connectBtn.classList.remove('disconnect');
+        setStatus('Bağlantı Başarısız', 'error');
+    } finally {
+        connectBtn.disabled = false;
+    }
+}
+
+async function disconnectBle() {
+    if (!connectedDeviceId) return;
+    connectBtn.disabled = true;
+    try {
+        await BleClient.disconnect(connectedDeviceId);
+    } catch (e) {
+        console.error(e);
+    }
+    onBleDisconnected();
+}
+
+connectBtn.onclick = () => {
+    vibrate();
+    if (connectedDeviceId) {
+        disconnectBle();
+    } else {
+        scanAndConnect();
+    }
+};
+
+function handleBleValue(value) {
+    const text = dataViewToText(value).trim();
+    const parts = text.split(',');
+    if (parts.length < 2) return;
+
+    const p = parseFloat(parts[0]);
+    const r = parseFloat(parts[1]);
+    if (Number.isNaN(p) || Number.isNaN(r)) return; // bozuk veri karesini yoksay
+
+    rawPitch = p;
+    rawRoll = r;
+
+    if (parts.length >= 3) {
+        const b = parseInt(parts[2], 10);
+        if (!Number.isNaN(b)) battery = b;
+    }
+
+    // 4. Parametre: ESP32'den gelen komut (cihaz üzerindeki fiziksel buton)
+    if (parts.length >= 4 && parts[3].trim() === 'ZERO') {
+        zeroParameter(refPoints.length - 1); // En son eklenen aktif parametreyi sıfırla
+    }
+
+    // Üstel Hareketli Ortalama (EMA) Filtresi Uygulama
+    smoothedPitch = (rawPitch * filterFactor) + (smoothedPitch * (1 - filterFactor));
+    smoothedRoll  = (rawRoll * filterFactor)  + (smoothedRoll  * (1 - filterFactor));
+
+    updateUI();
+}
+
+function updateUI() {
+    refPoints.forEach((ref, index) => {
+        const cardIndex = index + 1;
+        const pitchEl = document.getElementById(`pitchVal_${cardIndex}`);
+        const rollEl = document.getElementById(`rollVal_${cardIndex}`);
+
+        if (!pitchEl || !rollEl) return;
+
+        const rp = smoothedPitch - ref.refPitch;
+        const rr = smoothedRoll - ref.refRoll;
+
+        // Seçilen basamak sayısına göre ekrana yazdır
+        pitchEl.textContent = rp.toFixed(precisionDigits) + '°';
+        rollEl.textContent  = rr.toFixed(precisionDigits) + '°';
+
+        // Ok Parlama Mantığı
+        const upArrow = document.getElementById(`upArrow_${cardIndex}`);
+        const upTxt = document.getElementById(`upTxt_${cardIndex}`);
+        const downArrow = document.getElementById(`downArrow_${cardIndex}`);
+        const downTxt = document.getElementById(`downTxt_${cardIndex}`);
+
+        const rightArrow = document.getElementById(`rightArrow_${cardIndex}`);
+        const rightTxt = document.getElementById(`rightTxt_${cardIndex}`);
+        const leftArrow = document.getElementById(`leftArrow_${cardIndex}`);
+        const leftTxt = document.getElementById(`leftTxt_${cardIndex}`);
+
+        if (upArrow) upArrow.classList.toggle('active', rp > 0.5);
+        if (upTxt) upTxt.classList.toggle('active', rp > 0.5);
+        if (downArrow) downArrow.classList.toggle('active', rp < -0.5);
+        if (downTxt) downTxt.classList.toggle('active', rp < -0.5);
+
+        if (rightArrow) rightArrow.classList.toggle('active', rr > 0.5);
+        if (rightTxt) rightTxt.classList.toggle('active', rr > 0.5);
+        if (leftArrow) leftArrow.classList.toggle('active', rr < -0.5);
+        if (leftTxt) leftTxt.classList.toggle('active', rr < -0.5);
+    });
+
+    // Pil Göstergesi
+    batteryText.textContent = battery + '%';
+    batteryFill.style.width = Math.min(100, Math.max(0, battery)) + '%';
+
+    if (battery > 50) batteryFill.style.background = '#00e676';
+    else if (battery > 20) batteryFill.style.background = '#ffb300';
+    else batteryFill.style.background = '#ff3d00';
+}
+
+// ================== WEB SPEECH API (SESLİ KOMUT ENTEGRASYONU) ==================
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+let recognition = null;
+let isListening = false;
+
+if (SpeechRecognition) {
+    recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = false;
+    recognition.lang = 'tr-TR';
+
+    recognition.onresult = (event) => {
+        const lastResultIndex = event.results.length - 1;
+        const command = event.results[lastResultIndex][0].transcript.trim().toLowerCase();
+
+        voiceStatus.textContent = `Algılandı: "${command}"`;
+
+        if (command.includes('sıfırla') || command.includes('sıfır') || command.includes('reset') || command.includes('temizle')) {
+            zeroParameter(refPoints.length - 1);
+        }
+    };
+
+    recognition.onerror = (e) => {
+        console.error("Ses tanıma hatası:", e.error);
+        voiceStatus.textContent = "Ses tanıma hatası oluştu";
+        if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+            isListening = false;
+            voiceBtn.textContent = '🎤 Sesli Komutu Başlat ("Sıfırla")';
+            voiceBtn.style.background = '#7c3aed';
+        }
+    };
+
+    recognition.onend = () => {
+        if (isListening) {
+            recognition.start();
+        }
+    };
+} else {
+    voiceBtn.disabled = true;
+    voiceBtn.style.opacity = "0.5";
+    voiceStatus.textContent = "Bu cihaz sesli komutu desteklemiyor";
+}
+
+voiceBtn.onclick = () => {
+    vibrate();
+    if (!recognition) return;
+
+    if (!isListening) {
+        isListening = true;
+        recognition.start();
+        voiceBtn.textContent = '🛑 Sesli Dinlemeyi Durdur';
+        voiceBtn.style.background = '#dc2626';
+        voiceStatus.textContent = 'Dinleniyor... ("Sıfırla" deyin)';
+    } else {
+        isListening = false;
+        recognition.stop();
+        voiceBtn.textContent = '🎤 Sesli Komutu Başlat ("Sıfırla")';
+        voiceBtn.style.background = '#7c3aed';
+        voiceStatus.textContent = 'Sesli dinleme kapalı';
+    }
+};
+
+// Sayfa ilk yüklendiğinde kartları oluştur
+renderMeasurementCards();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,11 @@
+node_modules/
+.DS_Store
+
+# cap sync tarafından www/'den otomatik kopyalanır, kaynak değil
+ios/App/App/public/
+
+# Xcode kullanıcı/derleme dosyaları
+ios/**/xcuserdata/
+ios/**/*.xcuserstate
+ios/DerivedData/
+ios/.build/
